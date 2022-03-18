@@ -14,7 +14,8 @@ yarn install
 
 ## Set project settings
 - move your image files to the output folder in project directory.  
-- create .env file and set tinify api key. (if you dont have api key, get your api key from https://tinypng.com/developers)
+- create .env file and set tinify api key.  
+if you dont have api key, get your api key from https://tinypng.com/developers
 ```
 echo "TINIFY_KEY=<YOUR_API_KEY>" > .env
 ```
