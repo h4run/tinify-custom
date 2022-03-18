@@ -26,7 +26,10 @@ async function createOutputDirs() {
 async function init() {
   await createOutputDirs();
 
-  const images = await fg(inputDir + '/**/*.?(png|jpg)', { onlyFiles: true });
+  const images = await fg(inputDir + '/**/*.?(png|jpg)', {
+    onlyFiles: true,
+    caseSensitiveMatch: false
+  });
 
   images.forEach(async function (file) {
     tinify
