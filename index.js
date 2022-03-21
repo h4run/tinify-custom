@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fg = require('fast-glob');
 const fs = require('fs');
+const im = require('imagemagick');
 
 const tinify = require('tinify');
 tinify.key = process.env.TINIFY_KEY;
@@ -22,6 +23,30 @@ async function createOutputDirs() {
   });
 }
 
+function getFileDistPath(file) {
+  return file.replace(inputDir, outputDir).replace('.JPG', '.jpg');
+}
+
+async function resize(file) {
+  return new Promise((resolve, reject) => {
+    const dstPath = getFileDistPath(file);
+    im.resize(
+      {
+        srcPath: file,
+        dstPath,
+        width: 1024,
+        quality: 1,
+        format: 'jpg',
+        sharpening: 0,
+      },
+      function (err, stdout, stderr) {
+        if (err) reject(err);
+        resolve(dstPath);
+      }
+    );
+  });
+}
+
 async function init() {
   await createOutputDirs();
 
@@ -39,14 +64,8 @@ async function init() {
     try {
       console.log(file, 'pending...');
 
-      await tinify
-        .fromFile(file)
-        .resize({
-          method: 'fit',
-          width: 1024,
-          height: 768,
-        })
-        .toFile(file.replace(inputDir, outputDir));
+      const resizedFile = await resize(file);
+      await tinify.fromFile(resizedFile).toFile(resizedFile);
 
       console.log('success.');
     } catch (e) {
