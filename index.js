@@ -11,8 +11,7 @@ const outputDir = 'output';
 async function createOutputDirs() {
   const dirs = await fg(inputDir + '/**', { onlyDirectories: true });
 
-  const createFolderList = dirs
-    .slice()
+  const createFolderList = [...dirs, outputDir]
     .map((dir) => dir.replace(inputDir, outputDir))
     .sort((a, b) => b.length - a.length);
 
@@ -26,21 +25,35 @@ async function createOutputDirs() {
 async function init() {
   await createOutputDirs();
 
-  const images = await fg(inputDir + '/**/*.?(png|jpg)', {
+  const fgImages = await fg(inputDir + '/**/*.?(png|jpg)', {
     onlyFiles: true,
-    caseSensitiveMatch: false
+    caseSensitiveMatch: false,
   });
 
-  images.forEach(async function (file) {
-    tinify
-      .fromFile(file)
-      .resize({
-        method: 'fit',
-        width: 1024,
-        height: 768,
-      })
-      .toFile(file.replace(inputDir, outputDir));
-  });
+  const images = fgImages.filter(
+    (file) => !fs.existsSync(file.replace(inputDir, outputDir))
+  );
+
+  for (const image in images) {
+    const file = images[image];
+    try {
+      console.log(file, 'pending...');
+
+      await tinify
+        .fromFile(file)
+        .resize({
+          method: 'fit',
+          width: 1024,
+          height: 768,
+        })
+        .toFile(file.replace(inputDir, outputDir));
+
+      console.log('success.');
+    } catch (e) {
+      console.log(e);
+      console.log('failed.');
+    }
+  }
 }
 
 init();

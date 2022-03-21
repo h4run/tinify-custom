@@ -2,3 +2,4 @@ node_modules/
 input/
 output/
 .DS_Store
+.env
