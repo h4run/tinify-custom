@@ -10,7 +10,7 @@ git clone https://github.com/h4run/tinify-custom.git
 
 install npm packages:
 ```
-cd custom-tinify
+cd tinify-custom
 yarn install
 ```
 
