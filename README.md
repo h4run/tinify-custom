@@ -1,6 +1,6 @@
 # tinify-custom
 
-**Note**: imagemagic cli tool is required.
+**Note**: imagemagick cli tool is required.
 
 ## Installation
 clone the repository:
