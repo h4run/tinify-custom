@@ -36,8 +36,6 @@ async function resize(file) {
         dstPath,
         width: 1024,
         quality: 1,
-        format: 'jpg',
-        sharpening: 0,
       },
       function (err, stdout, stderr) {
         if (err) reject(err);
